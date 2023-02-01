@@ -1,0 +1,24 @@
+:root {
+  font-size: 16px;
+}
+
+.container__row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 10px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.add-item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 296px;
+}
+
+.add-item-form__description {
+  max-width: 296px;
+  height: 100px;
+}
