@@ -12,7 +12,9 @@ const AddCard = () => {
           setHtmlForm(renderHtmlForm())
           setAddButton(null)
           }
-      }>Add card</button>
+      }>
+        Add card
+      </button>
     )
   }
 
@@ -37,8 +39,7 @@ const renderHtmlForm = () => {
                 />
       <div className='container__row'>
           <button className='btn' onClick={
-            (e) => {      
-              console.log(cardTitle, cardImgLink, cardDescription)    
+            (e) => {   
               e.preventDefault();
               // renderCard();
               setHtmlForm(null);
