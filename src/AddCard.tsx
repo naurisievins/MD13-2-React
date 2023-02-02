@@ -1,9 +1,20 @@
 import './AddCard.css'
 import { useState } from 'react'
 
-const AddCard = () => {
+type Fruits = {
+  id: number
+  title: string
+  description: string
+  image: string;
+}[]
+
+const AddCard = (props: { cardData: Fruits[],
+                          setCardData: React.Dispatch<React.SetStateAction<Fruits[]>> }) => {
 
 
+  const handleAddBtn = () => {
+    ///////////////////////////
+  }
 
   const renderAddButton = () => {
     return (
@@ -41,9 +52,9 @@ const renderHtmlForm = () => {
           <button className='btn' onClick={
             (e) => {   
               e.preventDefault();
-              // renderCard();
               setHtmlForm(null);
               setAddButton(renderAddButton());
+              handleAddBtn();
             }
           }>Add</button>
           <button className='btn' type='submit' onClick={
@@ -60,8 +71,8 @@ const renderHtmlForm = () => {
 
   return (
     <div className='container__row'>
-        {addButton}
-        {htmlForm}
+      {addButton}
+      {htmlForm}
     </div>
   )
 }

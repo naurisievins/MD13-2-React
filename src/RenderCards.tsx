@@ -14,49 +14,75 @@ const RenderCards = () => {
   const url = 'http://localhost:3004/fruits/';
 
   const [cardData, setCardData] = useState<Fruits[]>([]);
-  const [editForm, setEditForm] = useState<any | null>(null);
-  const [showForm, setShowForm] = useState<{ [key: string]: boolean }>({});
+  const [showForm, setShowForm] = useState<number | null>(null);
+  const [editFormTitle, setEditFormTitle] = useState<string>();
+  const [editFormImage, setEditFormImage] = useState<string>();
+  const [editFormDescription, setEditFormDescription] = useState<string>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(url);
-      setCardData(result.data);
-    };
-    fetchData();
+    fetch(url)
+      .then(response => response.json())
+      .then(jsonData => setCardData(jsonData));
   }, []);
 
-
-  const renderForm = (index: number) => {
-    return (
-      <form className="container__form">
-        <input className="edit__title" placeholder={cardData[index].title}  />
-        <textarea className="edit_description" placeholder="Description" value={cardData[index].description} onChange={(e) => setTitleInputValue(e.target.value)} />
-        <input className="edit_img" placeholder="New image link" value={cardData[index].image} onChange={(e) => e.target.value} />
-        <button className="btn" onClick={(e) => {
-          e.preventDefault();
-        }}>
-          Update
-        </button>
-      </form>
-    )
+  const handleDeleteBtn = (id: number) => {
+    const deleteIndex = cardData.findIndex(card => card.id === id);
+    const newData = cardData.filter((_, index) => index !== deleteIndex);
+    setCardData(newData);
   }
 
+  const handleEditBtn = (id: number) => {
+    setShowForm(id)
 
-  const handleEditBtn = (index: number) => {
-      setShowForm((prevState) => ({
-        [String(index)]: !prevState[String(index)],
-      }));
+    const item = cardData.find((item) => item.id === id);
+    setEditFormTitle(item?.title);
+    setEditFormDescription(item?.description);
+    setEditFormImage(item?.image);
+  }
 
-      showForm[index] ? setEditForm(null): setEditForm(renderForm(index));
-    }
+  const handleCancelBtn = () => {
+    setShowForm(null)
+  }
+
+  const handleUpdateBtn = () => {
+    setCardData(prevData =>
+      prevData.map(item => {
+        if (item.id === showForm) {
+          return { ...item, title: editFormTitle, image: editFormImage, description: editFormDescription };
+        }
+        return item;
+      })
+    );
+    setShowForm(null);
+    setEditFormTitle('');
+    setEditFormImage('');
+    setEditFormDescription('');
+  };
+
+  const handleAddBtn = () => {
+    console.log('add');
+    
+  }
 
   return (
     <div className='container__row'>
-      {cardData.map((card, index) => (
-        <div className='card' key={index}>
+      {cardData.map((card) => (
+        <div className='card' key={card.id}>
           <div className='container__row'>
+          { showForm === card.id && (
+            <form className="container__form">
+              <input className="edit__title" placeholder='Title' value={editFormTitle} onChange={e => setEditFormTitle(e.target.value)}  />
+              <textarea className="edit_description" placeholder="Description" value={editFormDescription} onChange={e => setEditFormDescription(e.target.value)} />
+              <input className="edit_img" placeholder="New image link" value={editFormImage} onChange={e => setEditFormImage(e.target.value)} />
+              <button className="btn" onClick={(e) => {
+                e.preventDefault();
+                handleUpdateBtn();
+              }}>
+                Update
+              </button>
+            </form>
+              )}
             <div className='card__image'>
-              { showForm[index] && editForm }
               <img src={card.image} alt={card.title} height='200px' />
             </div>
           </div>
@@ -65,10 +91,18 @@ const RenderCards = () => {
             <div className='card__description'>{card.description}</div>
           </div>
           <div className='container__row'>
-            <button className='btn' onClick={() => handleEditBtn(index)}>
-              { showForm[index] ? 'Cancel' : 'Edit' }
+            { showForm === card.id ? (
+              <button className='btn' onClick={handleCancelBtn}>
+                Cancel
+            </button>
+            ) : (
+              <button className='btn' onClick={() => handleEditBtn(card.id)}>
+                Edit
               </button>
-            <button className='btn'>Delete</button>
+            )}
+            <button className='btn' onClick={() => handleDeleteBtn(card.id)}>
+              Delete
+            </button>
           </div>
         </div>
         ))}
