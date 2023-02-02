@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import axios from 'axios';
 import './RenderCards.css'
 
@@ -25,27 +25,30 @@ const RenderCards = () => {
     fetchData();
   }, []);
 
+
   const renderForm = (index: number) => {
     return (
       <form className="container__form">
-        <input className="edit__title" placeholder="Title" value={cardData[index].title} />
-        <textarea className="edit_description" placeholder="Description" value={cardData[index].description} />
-        <input className="edit_img" placeholder="New image link" value={cardData[index].image} />
-        <button className="btn">Update</button>
+        <input className="edit__title" placeholder={cardData[index].title}  />
+        <textarea className="edit_description" placeholder="Description" value={cardData[index].description} onChange={(e) => setTitleInputValue(e.target.value)} />
+        <input className="edit_img" placeholder="New image link" value={cardData[index].image} onChange={(e) => e.target.value} />
+        <button className="btn" onClick={(e) => {
+          e.preventDefault();
+        }}>
+          Update
+        </button>
       </form>
     )
   }
 
 
   const handleEditBtn = (index: number) => {
-    
-    setShowForm((prevState) => ({
-      ...prevState,
-      [String(index)]: !prevState[String(index)],
-    }));
+      setShowForm((prevState) => ({
+        [String(index)]: !prevState[String(index)],
+      }));
 
-    showForm[index] ? setEditForm(null): setEditForm(renderForm(index));
-  }
+      showForm[index] ? setEditForm(null): setEditForm(renderForm(index));
+    }
 
   return (
     <div className='container__row'>
