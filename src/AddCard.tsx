@@ -1,20 +1,14 @@
-import './AddCard.css'
 import { useState } from 'react'
+import './AddCard.css'
 
-type Fruits = {
-  id: number
-  title: string
-  description: string
-  image: string;
-}[]
+type HandleAddType = {
+  handleAddBtn: (title: string,
+                 description: string,
+                 image: string
+                ) => void
+}
 
-const AddCard = (props: { cardData: Fruits[],
-                          setCardData: React.Dispatch<React.SetStateAction<Fruits[]>> }) => {
-
-
-  const handleAddBtn = () => {
-    ///////////////////////////
-  }
+const AddCard = ({handleAddBtn} :HandleAddType) => {
 
   const renderAddButton = () => {
     return (
@@ -54,7 +48,7 @@ const renderHtmlForm = () => {
               e.preventDefault();
               setHtmlForm(null);
               setAddButton(renderAddButton());
-              handleAddBtn();
+              handleAddBtn(cardTitle, cardDescription, cardImgLink);
             }
           }>Add</button>
           <button className='btn' type='submit' onClick={
